@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <h1 class="err"></h1>
+    <img src="#" />
+    <div class="d-flex">
+      <div>
+        <button class="luck">I feel lucky</button> <br />
+        <span>Might take some time to reload a new gif.</span>
+      </div>
+      <div>
+        <input type="text" name="" id="search" />
+        <button class="search-btn">Search</button>
+      </div>
+    </div>
+    <script>
+      function randomNumber(min, max) {
+        const r = Math.random() * (max - min) + min;
+        return Math.floor(r);
+      }
+      const displayErr = document.querySelector('.err');
+      const img = document.querySelector('img');
+      const luck = document.querySelector('.luck');
+      const search = document.querySelector('#search');
+      const btn = document.querySelector('.search-btn');
+      async function getCats(){
+        const response = await fetch(
+        'https://api.giphy.com/v1/gifs/translate?api_key=IXLmidNhITgZqG3aLUJbMI1Eu7yev43R&s=cats',
+        { mode: 'cors' }
+      )
+        const res = await response.json()
+        displayErr.innerHTML = '';
+        img.src = res.data.images.original.url;
+      btn.addEventListener('click', async () => {
+        try{if (search.value.length == 0) {
+          alert('Please enter a value first.');
+        } else {
+          const response = await fetch(
+            `https://api.giphy.com/v1/gifs/translate?api_key=IXLmidNhITgZqG3aLUJbMI1Eu7yev43R&s=${search.value}`,
+            { mode: 'cors' }
+          )
+          const res = await response.json()
+          displayErr.innerHTML = '';
+          img.src = res.data.images.original.url;
+          search.value = ''
+        }
+        } catch(err) {
+        search.value = ''
+        displayErr.innerHTML =
+          'Woops! WRONG ANSWER! But here is a gift from me.';
+        img.src =
+          'https://media.giphy.com/media/Kfr4w0PEeUJSGL7mOd/giphy.gif';
+      }
+      });
+      luck.addEventListener('click', async () => {
+        const arr = ['cat', 'kitty', 'kittens', 'cats', 'meow'];
+        let i = randomNumber(0, arr.length -1);
+        i += 1;
+        const response = await fetch(
+          `https://api.giphy.com/v1/gifs/translate?api_key=IXLmidNhITgZqG3aLUJbMI1Eu7yev43R&s=${arr[i]}`,
+          { mode: 'cors' }
+        )
+        const res = await response.json()
+        displayErr.innerHTML = '';
+        img.src = res.data.images.original.url;
+      });
+      }
+      getCats()
+    </script>
+  </body>
+</html>
